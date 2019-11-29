@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon dist/server.js --exec 'tsc && node'",
+    "dev": "nodemon dist/server.js --exec \"npm run build && node\"",
     "start": "node dist/server.js"
   },
   "author": "",
