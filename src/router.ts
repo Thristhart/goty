@@ -1,5 +1,5 @@
-import Router from '@koa/router';
-import { getGames } from './routes/api/games';
+import Router from "@koa/router";
+import { getGames } from "./routes/api/games";
 
 export const router = new Router();
 
