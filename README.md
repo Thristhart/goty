@@ -15,6 +15,7 @@
 -   Select/Deselect games by platform.
 -   Pull data from other sources (eg steam, xbox gameplay stats)
 -   Final List is customisable
+-   Show users info about the games
 -   Telemetry
 
 ## Telemetry

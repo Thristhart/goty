@@ -5,7 +5,7 @@
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
         "importHelpers": true,
-        "module": "commonjs",
+        "module": "esnext",
         "moduleResolution": "node",
         "noResolve": false,
         "noImplicitAny": true,
