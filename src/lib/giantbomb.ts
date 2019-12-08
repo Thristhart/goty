@@ -12,11 +12,23 @@ const LIMIT = 100;
 interface GetGamesOptions {
     offset: number;
 }
+const gbRequestQueue: (() => void)[] = [];
+const makeGbRequest = (url: string) => {
+    return new Promise<Response>((resolve) => {
+        gbRequestQueue.push(() => resolve(fetch(url)));
+    });
+};
+setInterval(() => {
+    const nextRequest = gbRequestQueue.shift();
+    if (nextRequest) {
+        nextRequest();
+    }
+}, 1000);
 
 export async function getGamesFromGiantbomb(options: GetGamesOptions) {
     const url = `https://www.giantbomb.com/api/games/?api_key=${API_KEY}&format=json&filter=original_release_date:${YEAR_START}|${YEAR_END}&offset=${options.offset}&limit=${LIMIT}`;
 
-    const responseData: GBResponse<GBGame[]> = await getFromCacheOrNetwork(url);
+    const responseData: GBResponse<GBGame[]> = await getFromCacheOrNetwork(url, makeGbRequest);
 
     responseData.results.forEach((game) => {
         saveToCache(buildGameDetailUrl(game.guid), {
@@ -30,7 +42,7 @@ export async function getGamesFromGiantbomb(options: GetGamesOptions) {
 }
 
 export async function getGameDetailFromGiantbomb(guid: string) {
-    const response: GBResponse<GBGame> = await getFromCacheOrNetwork(buildGameDetailUrl(guid));
+    const response: GBResponse<GBGame> = await getFromCacheOrNetwork(buildGameDetailUrl(guid), makeGbRequest);
     return response.results;
 }
 

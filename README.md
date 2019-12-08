@@ -3,11 +3,11 @@
 ## Requirements
 
 -   Customize game list(Has all of the games from this year?)
-    -   Search GB?
-    -   "Recommended" list?
-    -   Can we pull steam gameplay data?
+-   Search GB?
+-   "Recommended" list?
+-   Can we pull steam gameplay data?
 -   Users / login
-    -   Save progress
+-   Save progress
 -   Usable by Tom's coworkers
 
 ## Enhancements
@@ -25,8 +25,7 @@
 
 ## Terminology
 
--   Repository: Set of possible games.
--   List: the games that the user has played, sorted
+-   List: the games that the user has played
 -   Result: the GOTY list, ordered.
 -   Final List: Result + User Edits.
 
@@ -35,3 +34,22 @@
 -   Identify played games
 -   Sort games
 -   Edit list
+
+# APIs
+
+-   Login with google
+-   On user creation, populate list with initial default list
+-   Get list for current user
+    {
+    list: details[],
+    }
+-   Add item to list for current user
+-   Remove item from list for current user
+-   Search GB games
+    query: text
+-   choose between two games (Will update list on DB and/or Result on last comparison)
+-   Returns current list status.
+-   Get next comparison
+-   Save result ("finish comparison")
+-   Get result
+-   Update result(order)

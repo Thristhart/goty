@@ -1,9 +1,8 @@
 import { Middleware, Next, ParameterizedContext } from "koa";
-import { insertGameToDB } from "../../data/games";
 import { generateContToken, getGameDetailFromGiantbomb, getGamesFromGiantbomb } from "../../lib/giantbomb";
 import { GBGame } from "../../lib/giantbomb_model";
 
-interface GamesApiResponse {
+export interface GamesApiResponse {
     contToken?: string;
     games: GBGame[];
 }
@@ -36,17 +35,4 @@ export const getGameDetail: Middleware = async (ctx: ParameterizedContext, next:
     const response: GBGame = await getGameDetailFromGiantbomb(guid);
 
     ctx.body = response;
-};
-
-export const insertGame: Middleware = async (ctx: ParameterizedContext, next: Next) => {
-    const guid = ctx.params.id;
-    if (!guid) {
-        ctx.status = 400;
-        ctx.body = "Missing guid.";
-        return;
-    }
-
-    await insertGameToDB(guid);
-
-    ctx.body = "Pass.";
 };
