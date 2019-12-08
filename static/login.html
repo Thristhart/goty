@@ -2,18 +2,64 @@
 <html>
     <head>
         <title>GOTY! - Log In</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:500|Raleway:400:900&display=swap" rel="stylesheet" />
     </head>
     <body>
         <style>
             body {
-                margin: 0;
+                background: #0e0e0e;
+                color: white;
+                font-family: "Raleway", sans-serif;
+                margin: 4em;
+                display: flex;
+                flex-direction: column;
+            }
+            ul {
+                list-style: none;
                 padding: 0;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+            }
+            h1 {
+                max-width: 600px;
+                text-align: center;
+                align-self: center;
+            }
+            .google-login {
+                font-family: "Roboto", sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                display: flex;
+                background-color: #4285f4;
+                color: white;
+                align-items: center;
+                width: 191px;
+                height: 46px;
+                text-decoration: none;
+                padding: 1px;
+                box-sizing: border-box;
+                border-radius: 2px;
+            }
+            .google-login:active {
+                background: #3367d6;
+            }
+            .google-login:focus {
+                outline: #c6dafb solid 4px;
+            }
+            .google-login .login-icon {
+                background: white;
+                margin-right: 12px;
+                border-radius: 2px;
             }
         </style>
         <h1>To start building your game of the year list, please log in with one of the following providers:</h1>
         <ul>
             <li>
-                <a href="/login_with_google">Google</a>
+                <a href="/login_with_google" class="google-login">
+                    <img class="login-icon" src="./assets/google/login_icon.svg" width="44" height="44" />
+                    Sign in with Google
+                </a>
             </li>
         </ul>
     </body>
