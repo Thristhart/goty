@@ -1,9 +1,9 @@
 import { getDataOrPrevious, LCE, lceContent, lceError, lceLoading, lceNotRequested } from "@model/LCE";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GBGame } from "../../../lib/giantbomb_model";
+import { GOTYGame } from "../../../lib/api_model";
 
 interface GamesByIdState {
-    readonly [guid: string]: GBGame;
+    readonly [guid: string]: GOTYGame;
 }
 interface AllGamesState {
     readonly contToken?: string;
@@ -16,7 +16,7 @@ export const allGamesSlice = createSlice({
         startGetMoreGames(state) {
             state.games = lceLoading(state.games);
         },
-        getMoreGamesSuccess(state, action: PayloadAction<{ games: GBGame[]; contToken?: string }>) {
+        getMoreGamesSuccess(state, action: PayloadAction<{ games: GOTYGame[]; contToken?: string }>) {
             const existing = getDataOrPrevious<string[]>(state.games);
             const base = existing || [];
             state.games = lceContent(base.concat(action.payload.games.map((game) => game.guid)));
@@ -31,9 +31,14 @@ export const gamesByIdSlice = createSlice({
     name: "gamesById",
     initialState: {} as GamesByIdState,
     reducers: {
-        setGame(state, action: PayloadAction<{ guid: string; game: GBGame }>) {
+        setGame(state, action: PayloadAction<{ guid: string; game: GOTYGame }>) {
             const { guid, game } = action.payload;
             state[guid] = game;
+        },
+        setHasPlayedGame(state, action: PayloadAction<{ guid: string; hasPlayed: boolean }>) {
+            if (state[action.payload.guid]) {
+                state[action.payload.guid].hasPlayed = action.payload.hasPlayed;
+            }
         },
     },
     extraReducers: (builder) =>
