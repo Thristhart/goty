@@ -1,0 +1,15 @@
+{
+    "GB_API_KEY": "GB_API_KEY",
+    "REDIS": {
+        "password": "REDIS_PASSWORD"
+    },
+    "SQL_INFO": {
+        "user": "SQL_USER",
+        "password": "SQL_PASSWORD"
+    },
+    "GOOGLE_OAUTH": {
+        "clientID": "GOOGLE_CLIENT_ID",
+        "clientSecret": "GOOGLE_CLIENT_SECRET"
+    },
+    "SESSION_KEY": "KOA_SESSION_KEY"
+}

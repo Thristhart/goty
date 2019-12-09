@@ -1,4 +1,4 @@
 node_modules
 dist
-config
+config/local-development.json
 static/build

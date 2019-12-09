@@ -1,0 +1,17 @@
+{
+    "REDIS": {
+        "host": "goty.redis.cache.windows.net",
+        "port": 6380,
+        "tls": {
+            "servername": "goty.redis.cache.windows.net"
+        }
+    },
+    "SQL_INFO": {
+        "server": "goty.database.windows.net",
+        "port": 1433,
+        "database": "goty",
+        "options": {
+            "encrypt": true
+        }
+    }
+}
