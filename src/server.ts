@@ -1,4 +1,5 @@
 import config from "config";
+import fs from "fs";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import passport from "koa-passport";
@@ -8,6 +9,8 @@ import path from "path";
 import "./auth";
 import { logMiddleware } from "./middleware/logging";
 import { router } from "./router";
+
+console.log(fs.readdirSync("./config"));
 
 const app = new Koa();
 
