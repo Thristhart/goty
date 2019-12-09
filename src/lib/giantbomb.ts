@@ -1,4 +1,5 @@
 import config from "config";
+import fetch, { Response } from "node-fetch";
 import { getFromCacheOrNetwork, saveToCache } from "./cache";
 import { GBGame, GBResponse } from "./giantbomb_model";
 
@@ -26,9 +27,28 @@ setInterval(() => {
 }, 1000);
 
 export async function getGamesFromGiantbomb(options: GetGamesOptions) {
-    const url = `https://www.giantbomb.com/api/games/?api_key=${API_KEY}&format=json&filter=original_release_date:${YEAR_START}|${YEAR_END}&offset=${options.offset}&limit=${LIMIT}`;
+    const url = `https://www.giantbomb.com/api/games/?api_key=${API_KEY}&format=json&filter=original_release_date:${YEAR_START}|${YEAR_END}&sort=original_release_date:asc&offset=${options.offset}&limit=${LIMIT}`;
 
     const responseData: GBResponse<GBGame[]> = await getFromCacheOrNetwork(url, makeGbRequest);
+
+    responseData.results = responseData.results.filter((game) => {
+        if (!game.platforms) {
+            return false;
+        }
+        // no release
+        if (!game.expected_release_year && !game.original_release_date) {
+            return false;
+        }
+        // year, but no original release and nothing more specific than the month, suggests never released
+        if (
+            game.expected_release_year &&
+            !game.original_release_date &&
+            !(game.expected_release_day && game.expected_release_month)
+        ) {
+            return false;
+        }
+        return true;
+    });
 
     responseData.results.forEach((game) => {
         saveToCache(buildGameDetailUrl(game.guid), {

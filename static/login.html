@@ -10,9 +10,22 @@
                 background: #0e0e0e;
                 color: white;
                 font-family: "Raleway", sans-serif;
-                margin: 4em;
+                margin: 0;
+                padding: 0;
+            }
+            nav {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                align-items: center;
+                background: #1e1d1d;
+                padding: 6px;
+            }
+            nav h1 {
+                margin-left: 8px;
+            }
+            .site-icon {
+                width: 32px;
+                height: 32px;
             }
             ul {
                 list-style: none;
@@ -21,10 +34,15 @@
                 align-items: center;
                 flex-direction: column;
             }
-            h1 {
+            h1.loginPrompt {
                 max-width: 600px;
                 text-align: center;
                 align-self: center;
+            }
+            .content {
+                margin: 4em;
+                display: flex;
+                flex-direction: column;
             }
             .google-login {
                 font-family: "Roboto", sans-serif;
@@ -53,14 +71,22 @@
                 border-radius: 2px;
             }
         </style>
-        <h1>To start building your game of the year list, please log in with one of the following providers:</h1>
-        <ul>
-            <li>
-                <a href="/login_with_google" class="google-login">
-                    <img class="login-icon" src="./assets/google/login_icon.svg" width="44" height="44" />
-                    Sign in with Google
-                </a>
-            </li>
-        </ul>
+        <nav>
+            <img src="./assets/goty_goat.png" class="site-icon" />
+            <h1>GOTY.app</h1>
+        </nav>
+        <section class="content">
+            <h1 class="loginPrompt">
+                To start building your game of the year list, please log in with one of the following providers:
+            </h1>
+            <ul>
+                <li>
+                    <a href="/login_with_google" class="google-login">
+                        <img class="login-icon" src="./assets/google/login_icon.svg" width="44" height="44" />
+                        Sign in with Google
+                    </a>
+                </li>
+            </ul>
+        </section>
     </body>
 </html>

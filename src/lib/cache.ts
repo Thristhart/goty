@@ -1,4 +1,5 @@
 import config from "config";
+import { Response } from "node-fetch";
 import redis from "redis";
 import { promisify } from "util";
 

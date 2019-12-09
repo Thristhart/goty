@@ -39,12 +39,13 @@
 
 -   Login with google
 -   On user creation, populate list with initial default list
+-   Reset user progress ("start over")
 -   Get list for current user
     {
-    list: details[],
+    list: details[], (includes "has played")
     }
 -   Add item to list for current user
--   Remove item from list for current user
+-   Set has played true/false for game for current user
 -   Search GB games
     query: text
 -   choose between two games (Will update list on DB and/or Result on last comparison)
