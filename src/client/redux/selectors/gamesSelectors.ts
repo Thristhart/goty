@@ -1,4 +1,4 @@
-import { getDataOrPrevious, LCE, lceContent } from "@model/LCE";
+import { getDataOrPrevious, isLoading, LCE, lceContent, lceLoading } from "@model/LCE";
 import { GOTYGame } from "../../../lib/api_model";
 import { RootState } from "../rootReducer";
 
@@ -11,5 +11,9 @@ export const getHydratedGames = (state: RootState): LCE<GOTYGame[]> => {
     if (!games) {
         return state.allGames.games as LCE<GOTYGame[]>;
     }
-    return lceContent(games.map((gameId) => state.gamesById[gameId]));
+    const hydratedGames = lceContent(games.map((gameId) => state.gamesById[gameId]));
+    if (isLoading(state.allGames.games)) {
+        return lceLoading(hydratedGames);
+    }
+    return hydratedGames;
 };

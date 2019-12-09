@@ -8,6 +8,13 @@ interface GameProps {
     readonly style: React.CSSProperties;
     readonly index: number;
 }
+
+function buildDateFromGame(game: GOTYGame) {
+    if (game.original_release_date) {
+        return new Date(game.original_release_date);
+    }
+    return new Date(game.expected_release_year!, game.expected_release_month! - 1, game.expected_release_day!);
+}
 export const Game = (props: GameProps) => {
     const { game, index } = props;
     const dispatch = useDispatch();
@@ -17,16 +24,18 @@ export const Game = (props: GameProps) => {
             window.dispatchEvent(new CustomEvent("goToNext", { detail: index }));
         }, 200);
     };
+    const releaseDate = buildDateFromGame(game);
     return (
         <section className="game" style={props.style}>
             <div className="gameGradient" />
             <img src={game.image.original_url} className="gameImage" />
             <section className="gameInfo">
                 <h3 className="title">{game.name}</h3>
-                <h4 className="platforms">{game.platforms.map((platform) => platform.name).join(", ")}</h4>
+                <span className="platforms">{game.platforms.map((platform) => platform.name).join(", ")}</span>
                 <a href={game.site_detail_url} target="_blank">
                     {game.site_detail_url}
                 </a>
+                <span className="releaseDate">Released: {releaseDate.toLocaleDateString()}</span>
             </section>
             <section className="choices" data-played={game.hasPlayed}>
                 <div className="buttonBackground" />

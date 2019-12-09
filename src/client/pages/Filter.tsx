@@ -1,3 +1,4 @@
+import { allGamesSlice } from "@redux/slices/games";
 import { UISlice } from "@redux/slices/ui";
 import { GOTYGame } from "lib/api_model";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,7 +24,8 @@ interface RowRenderInfo {
 function lerp(start: number, end: number, t: number) {
     return start * (1 - t) + end * t;
 }
-const ListView = (games: GOTYGame[]) => {
+const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
+    const dispatch = useDispatch();
     const containerRef = useRef<HTMLDivElement>(null);
     const listRef = useRef<List>(null);
     const isAutoScrollEnabled = useSelector(getIsAutoScrollEnabled);
@@ -95,8 +97,18 @@ const ListView = (games: GOTYGame[]) => {
             }
         }
     };
+    // more hacks to work around over-memoized callbacks
+    const isLoadingAsOfLastRenderRef = useRef(false);
+    isLoadingAsOfLastRenderRef.current = isLoading;
+
+    console.log(isLoading);
+
     const onRowsRendered = (info: RowRenderInfo) => {
         lastRowRenderInfo.current = info;
+        console.log(info.overscanStopIndex + 3 >= games.length, isLoadingAsOfLastRenderRef.current);
+        if (info.overscanStopIndex + 3 >= games.length && !isLoadingAsOfLastRenderRef.current) {
+            dispatch(allGamesSlice.actions.startGetMoreGames());
+        }
     };
     useEffect(() => {
         window.addEventListener("goToNext", goToNext);
@@ -126,7 +138,7 @@ const renderContent = (content: CONTENT<GOTYGame[]>) => {
 };
 const renderLoading = (content: LOADING<GOTYGame[]>) => {
     if (content.previousContent) {
-        return ListView(content.previousContent.data);
+        return ListView(content.previousContent.data, true);
     }
     return null;
 };
