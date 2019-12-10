@@ -6,8 +6,6 @@ import { findOrCreateUser } from "../../data/users";
 
 const baseURL = process.env.NODE_ENV === "production" ? "https://goty.app" : "http://localhost.shea.at:8080";
 
-console.log(baseURL);
-
 const googleOauthConfig: {
     clientID: string;
     clientSecret: string;
