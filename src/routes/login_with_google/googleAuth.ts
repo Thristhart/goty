@@ -4,7 +4,9 @@ import passport from "koa-passport";
 import { Strategy, StrategyOptions } from "passport-google-oauth20";
 import { findOrCreateUser } from "../../data/users";
 
-const baseURL = process.env.production ? "https://goty.app" : "http://localhost.shea.at:8080";
+const baseURL = process.env.NODE_ENV === "production" ? "https://goty.app" : "http://localhost.shea.at:8080";
+
+console.log(baseURL);
 
 const googleOauthConfig: {
     clientID: string;
