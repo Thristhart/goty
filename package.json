@@ -8,8 +8,8 @@
         "build:client": "webpack --config ./webpack.config.js --mode production",
         "dev:server": "nodemon dist/server.js --exec \"npm run build:server && node\"",
         "dev:client": "webpack --config ./webpack.config.js --mode development --watch",
-        "start": "npm run build:server && npm run build:client && node dist/server.js",
-        "postinstall": "build:server && build:client"
+        "start": "node dist/server.js",
+        "postinstall": "npm run build:server && npm run build:client"
     },
     "author": "",
     "license": "MIT",
