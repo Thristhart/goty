@@ -9,7 +9,6 @@ const connectionPromise = pool.connect();
 export const getListFromDB = async (id: string): Promise<ListItem[]> => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
-    console.log(id);
     ps.input("id", sql.VarChar);
     let listItems: ListItem[] = [];
     try {
@@ -18,13 +17,9 @@ export const getListFromDB = async (id: string): Promise<ListItem[]> => {
             WHERE userId = @id`);
         let result = await ps.execute({ id });
         listItems = [];
-        console.log("result.recordset");
-        console.dir(result.recordset);
         result.recordset.map((x) => {
             listItems.push({ gameId: x.gameId, played: x.played });
         });
-        console.log("listItems");
-        console.dir(listItems);
         await ps.unprepare();
         return listItems;
     } catch (e) {
@@ -51,7 +46,6 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
             AND G.externalId = @gameExtId
         `);
         let result = await ps.execute({ gameExtId, userId, played });
-        console.log(result);
         await ps.unprepare();
         return true;
     } catch (e) {
