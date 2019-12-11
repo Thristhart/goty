@@ -11,5 +11,9 @@
         "clientID": "GOOGLE_CLIENT_ID",
         "clientSecret": "GOOGLE_CLIENT_SECRET"
     },
+    "MICROSOFT_OAUTH": {
+        "clientID": "MICROSOFT_CLIENT_ID",
+        "clientSecret": "MICROSOFT_CLIENT_SECRET"
+    },
     "SESSION_KEY": "KOA_SESSION_KEY"
 }
