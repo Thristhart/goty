@@ -11,6 +11,8 @@ import { getIsAutoScrollEnabled } from "../redux/selectors/uiSelectors";
 import { LCERenderer } from "../util/lceRenderer";
 import { useAnimationFrame } from "../util/useAnimationFrame";
 
+const rowHeight = 180;
+
 const renderFilterRow = (games: GOTYGame[], props: ListRowProps) => {
     const game = games[props.index];
     return <Game game={game} key={game.id} style={props.style} index={props.index} />;
@@ -71,29 +73,25 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
         }
     });
 
+    const scrollToPositionAnimated = (position: number) => {
+        scrollAnimationStartPosition.current = currentScrollPosition.current;
+        scrollAnimationEndScrollPosition.current = position;
+        scrollAnimationStartTimestamp.current = performance.now();
+        startScrollAnimation();
+    };
+
     const scrollToIndexAnimated = (index: number) => {
         if (listRef.current) {
-            scrollAnimationStartPosition.current = currentScrollPosition.current;
-            scrollAnimationEndScrollPosition.current = listRef.current.getOffsetForRow({ index });
-            scrollAnimationStartTimestamp.current = performance.now();
-            startScrollAnimation();
+            return scrollToPositionAnimated(listRef.current.getOffsetForRow({ index }));
         }
     };
 
     const goToNext = (event: Event) => {
         if (isAutoScrollEnabled) {
             if (listRef.current && lastRowRenderInfo.current) {
-                const beginningOfVisibleList = lastRowRenderInfo.current.startIndex;
-                const nextUnansweredItemIndex =
-                    gamesRef.current.slice(beginningOfVisibleList).findIndex((game) => game.hasPlayed === undefined) +
-                    beginningOfVisibleList;
-                if (nextUnansweredItemIndex < lastRowRenderInfo.current.stopIndex) {
-                    scrollToIndexAnimated(
-                        lastRowRenderInfo.current.stopIndex + (nextUnansweredItemIndex - beginningOfVisibleList)
-                    );
-                } else {
-                    scrollToIndexAnimated(nextUnansweredItemIndex);
-                }
+                scrollToPositionAnimated(
+                    currentScrollPosition.current + rowHeight - (currentScrollPosition.current % 180)
+                );
             }
         }
     };
@@ -101,11 +99,8 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
     const isLoadingAsOfLastRenderRef = useRef(false);
     isLoadingAsOfLastRenderRef.current = isLoading;
 
-    console.log(isLoading);
-
     const onRowsRendered = (info: RowRenderInfo) => {
         lastRowRenderInfo.current = info;
-        console.log(info.overscanStopIndex + 3 >= games.length, isLoadingAsOfLastRenderRef.current);
         if (info.overscanStopIndex + 3 >= games.length && !isLoadingAsOfLastRenderRef.current) {
             dispatch(allGamesSlice.actions.startGetMoreGames());
         }
@@ -121,7 +116,7 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
         <div ref={containerRef} className="listContainer">
             <List
                 rowRenderer={renderFilterRow.bind(undefined, games)}
-                rowHeight={180}
+                rowHeight={rowHeight}
                 rowCount={games.length}
                 width={size.width}
                 height={size.height}
