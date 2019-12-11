@@ -34,6 +34,9 @@
                 align-items: center;
                 flex-direction: column;
             }
+            ul li {
+                margin-top: 1em;
+            }
             h1.loginPrompt {
                 max-width: 600px;
                 text-align: center;
@@ -44,6 +47,32 @@
                 display: flex;
                 flex-direction: column;
             }
+            .microsoft-login {
+                font-family: Segoe UI Semibold, "Roboto", sans-serif;
+                font-size: 15px;
+                display: flex;
+                background-color: #2f2f2f;
+                color: white;
+                align-items: center;
+                width: 215px;
+                height: 46px;
+                text-decoration: none;
+                padding: 1px;
+                box-sizing: border-box;
+                border-radius: 2px;
+            }
+            .microsoft-login:active {
+                background: #3367d6;
+            }
+            .microsoft-login:focus {
+                outline: #c6dafb solid 4px;
+            }
+            .microsoft-login .login-icon {
+                background: transparent;
+                margin-right: 14px;
+                margin-left: 14px;
+                border-radius: 2px;
+            }
             .google-login {
                 font-family: "Roboto", sans-serif;
                 font-size: 14px;
@@ -52,7 +81,7 @@
                 background-color: #4285f4;
                 color: white;
                 align-items: center;
-                width: 191px;
+                width: 215px;
                 height: 46px;
                 text-decoration: none;
                 padding: 1px;
@@ -80,6 +109,12 @@
                 To start building your game of the year list, please log in with one of the following providers:
             </h1>
             <ul>
+                <li>
+                    <a href="/login_with_microsoft" class="microsoft-login">
+                        <img class="login-icon" src="./assets/microsoft/microsoft_logo.svg" width="22" height="22" />
+                        Sign in with Microsoft
+                    </a>
+                </li>
                 <li>
                     <a href="/login_with_google" class="google-login">
                         <img class="login-icon" src="./assets/google/login_icon.svg" width="44" height="44" />
