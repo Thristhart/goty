@@ -28,23 +28,22 @@ export const Game = (props: GameProps) => {
     return (
         <section className="game" style={props.style}>
             <div className="gameGradient" />
-            <img src={game.image.original_url} className="gameImage" />
+            <picture className="gamePicture">
+                <source media="(max-width: 640px)" srcSet={game.image.icon_url} />
+                <img src={game.image.original_url} alt={`image for ${game.name}`} className="gameImage" />
+            </picture>
             <section className="gameInfo">
                 <h3 className="title">{game.name}</h3>
                 <span className="platforms">{game.platforms.map((platform) => platform.name).join(", ")}</span>
-                <a href={game.site_detail_url} target="_blank">
+                <a className="gburl" href={game.site_detail_url} target="_blank">
                     {game.site_detail_url}
                 </a>
                 <span className="releaseDate">Released: {releaseDate.toLocaleDateString()}</span>
             </section>
             <section className="choices" data-played={game.hasPlayed}>
                 <div className="buttonBackground" />
-                <button id="playedIt" onClick={setHasPlayed.bind(undefined, true)}>
-                    PLAYED IT
-                </button>
-                <button id="notPlayedIt" onClick={setHasPlayed.bind(undefined, false)}>
-                    HAVEN'T PLAYED IT
-                </button>
+                <button className="playedIt" onClick={setHasPlayed.bind(undefined, true)}></button>
+                <button className="notPlayedIt" onClick={setHasPlayed.bind(undefined, false)}></button>
             </section>
         </section>
     );
