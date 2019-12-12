@@ -3,6 +3,7 @@
     <head>
         <title>GOTY! - Privacy Policy</title>
         <link href="https://fonts.googleapis.com/css?family=Raleway:400:900&display=swap" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
         <style>
@@ -10,13 +11,37 @@
                 background: #0e0e0e;
                 color: white;
                 font-family: "Raleway", sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            section {
                 margin: 4em;
             }
+            nav {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                background: #1e1d1d;
+                padding: 6px;
+            }
+            nav h1 {
+                margin-left: 8px;
+            }
+            .site-icon {
+                width: 32px;
+                height: 32px;
+            }
         </style>
-        <h1>Privacy Policy</h1>
-        <p>
-            Information collected from users on goty.app is used soley in generating that user's game of the year list,
-            and will never be shared with any third party.
-        </p>
+        <nav>
+            <a href="/"><img src="./assets/goty_goat.png" class="site-icon"/></a>
+            <h1>GOTY.app</h1>
+        </nav>
+        <section>
+            <h1>Privacy Policy</h1>
+            <p>
+                Information collected from users on goty.app is used soley in generating that user's game of the year
+                list, and will never be shared with any third party.
+            </p>
+        </section>
     </body>
 </html>
