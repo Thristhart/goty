@@ -11,10 +11,10 @@ export function* getMoreGames(action: ReturnType<typeof allGamesSlice.actions.st
 }
 
 export function* setHasPlayedGame(action: ReturnType<typeof gamesByIdSlice.actions.setHasPlayedGame>) {
-    yield call(setListItem, action.payload.guid, action.payload.hasPlayed);
+    yield call(setListItem, action.payload.id, action.payload.hasPlayed);
 }
 
-export const gamesSaga = function*() {
+export const gamesSaga = function* () {
     yield takeLeading(allGamesSlice.actions.startGetMoreGames.type, getMoreGames);
     yield takeLatest(gamesByIdSlice.actions.setHasPlayedGame.type, setHasPlayedGame);
 };

@@ -8,7 +8,7 @@ export interface ListItem {
 }
 
 export interface ListItemQuery {
-    gameExtId: string;
+    gameExtId: number;
     userId?: string;
     played: boolean;
 }

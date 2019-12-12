@@ -19,7 +19,7 @@ export const Game = (props: GameProps) => {
     const { game, index } = props;
     const dispatch = useDispatch();
     const setHasPlayed = (hasPlayed: boolean) => {
-        dispatch(gamesByIdSlice.actions.setHasPlayedGame({ guid: game.guid, hasPlayed }));
+        dispatch(gamesByIdSlice.actions.setHasPlayedGame({ id: game.id, hasPlayed }));
         setTimeout(() => {
             window.dispatchEvent(new CustomEvent("goToNext", { detail: index }));
         }, 200);
