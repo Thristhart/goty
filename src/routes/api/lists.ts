@@ -27,7 +27,7 @@ export const getList: Middleware = async (ctx: ParameterizedContext, next: Next)
 export const setListItemPlayed: Middleware = async (ctx: ParameterizedContext, next: Next) => {
     let listItem: ListItemQuery = ctx.request.body;
     listItem.userId = ctx.state.user.id;
-    const list = await setListItemPlayedInDB(ctx.state.user.id);
+    const list = await setListItemPlayedInDB(listItem);
     if (list != undefined) {
         ctx.body = list;
     } else {

@@ -16,10 +16,7 @@ export const getListFromDB = async (id: string): Promise<ListItem[]> => {
             INNER JOIN Lists L ON L.id = LI.listId
             WHERE userId = @id`);
         let result = await ps.execute({ id });
-        listItems = [];
-        result.recordset.map((x) => {
-            listItems.push({ gameId: x.gameId, played: x.played });
-        });
+        listItems = result.recordset.map((x) => ({ gameId: x.gameId, played: x.played }));
         await ps.unprepare();
         return listItems;
     } catch (e) {
@@ -35,8 +32,9 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
     ps.input("gameId", sql.UniqueIdentifier);
     ps.input("userId", sql.VarChar);
     ps.input("played", sql.Bit);
+    ps.input("gameExtId", sql.Int);
     try {
-        await ps.prepare(`
+        await ps.prepare(` 
             UPDATE ListItems
             SET played = @played
             FROM ListItems LI

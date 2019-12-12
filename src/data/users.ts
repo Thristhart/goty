@@ -26,7 +26,7 @@ export const createUser = async (id: string): Promise<boolean> => {
     const ps = new sql.PreparedStatement(connection);
     ps.input("id", sql.VarChar);
     try {
-        await ps.prepare(`INSERT INTO Users(id) VALUES (@id)`);
+        await ps.prepare(`INSERT INTO Users(id) VALUES (@id); INSERT INTO Lists(userID) VALUES (@id);`);
         await ps.execute({ id });
         await ps.unprepare();
         return true;
