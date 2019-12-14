@@ -7,7 +7,7 @@ export interface ListItem {
     gameId: string;
     listId?: string;
     played: boolean;
-    gameDetails: GBGame;
+    gameDetails?: GBGame;
 }
 
 export interface ListItemQuery {
