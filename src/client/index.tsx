@@ -1,5 +1,4 @@
 import { bootstrap } from "@redux/bootstrap";
-import { allGamesSlice } from "@redux/slices/games";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -18,7 +17,5 @@ const App = () => {
         </Provider>
     );
 };
-
-store.dispatch(allGamesSlice.actions.startGetMoreGames());
 
 ReactDOM.render(<App />, document.getElementById("app"));
