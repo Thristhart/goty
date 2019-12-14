@@ -10,7 +10,7 @@ const ONE_WEEK = 604800;
 
 const client = redis.createClient(REDIS_CONFIG);
 
-const get = promisify(client.get.bind(client));
+export const get = promisify(client.get.bind(client));
 const set: (key: string, value: any, mode: string, duration: number) => Promise<void> = promisify(
     client.set.bind(client)
 );
