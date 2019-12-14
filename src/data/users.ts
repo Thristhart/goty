@@ -1,6 +1,5 @@
 import config from "config";
 import sql from "mssql";
-import { createList } from "./lists";
 import { logTransactionError } from "./sqlHelper";
 
 const sqlInfo: sql.config = config.get("SQL_INFO");
@@ -26,19 +25,17 @@ export const getUserFromDB = async (id: string): Promise<User | undefined> => {
 export const createUser = async (id: string): Promise<boolean> => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
-    const transaction = new sql.Transaction(connection);
-    ps.input("id", sql.VarChar);
+
+    console.log(id)
+
+    ps.input("id", sql.VarChar(255));
     try {
-        await transaction.begin(sql.ISOLATION_LEVEL.READ_COMMITTED); //I'm not sure what ISOLATION_LEVEL here does, this is default.
-        await ps.prepare(`INSERT INTO Users(id) VALUES (@id)`);
+        await ps.prepare(`EXEC newUser @userId = @id`);
         await ps.execute({ id });
         await ps.unprepare();
-        await createList(id);
-        await transaction.commit();
         return true;
     } catch (e) {
         logTransactionError(e);
-        await transaction.rollback();
         return false;
     }
 };

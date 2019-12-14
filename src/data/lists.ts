@@ -1,6 +1,5 @@
 import config from "config";
 import sql from "mssql";
-import { defaultGameList } from "../constants";
 import { ListItem, ListItemQuery } from "../routes/api/lists";
 import { findOrCreateGame } from "./games";
 
@@ -62,9 +61,7 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
 
 const initialiseDefaultList = async (userId: string) => {
     const listId = await getListId(userId);
-    for (let gameId of defaultGameList) {
-        await insertListItem(listId, gameId);
-    }
+    bulkInsertListItems(listId);
 };
 
 const insertListItem = async (listId: string, gameExtId: number) => {
@@ -82,6 +79,21 @@ const insertListItem = async (listId: string, gameExtId: number) => {
 
     return true;
 };
+
+const bulkInsertListItems = async (listId: string) => {
+    const connection = await connectionPromise;
+    const ps = new sql.PreparedStatement(connection);
+
+    ps.input("listId", sql.UniqueIdentifier);
+
+    await ps.prepare(`INSERT INTO ListItems(listId, gameId, played)
+        SELECT @listId,
+        id,
+        0
+        FROM DefaultGames`);
+    await ps.execute({ listId });
+    await ps.unprepare();
+}
 
 export const createList = async (userId: string): Promise<boolean> => {
     const connection = await connectionPromise;
