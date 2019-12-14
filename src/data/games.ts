@@ -15,7 +15,7 @@ export const getGameFromDB = async (extId: number): Promise<string> => {
     await ps.unprepare();
 
     return result.recordset[0] && result.recordset[0].id;
-}
+};
 
 export const insertGameToDB = async (extId: number): Promise<boolean> => {
     const connection = await connectionPromise;
@@ -40,4 +40,4 @@ export const findOrCreateGame = async (extId: number): Promise<string> => {
     await insertGameToDB(extId);
     const newGameId = await getGameFromDB(extId);
     return newGameId;
-}
+};

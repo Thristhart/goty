@@ -13,11 +13,12 @@ export const getListFromDB = async (userId: string): Promise<ListItem[]> => {
     const ps = new sql.PreparedStatement(connection);
     ps.input("userId", sql.VarChar);
     let listItems: ListItem[] = [];
-    await ps.prepare(`SELECT gameId, played FROM ListItems LI
+    await ps.prepare(`SELECT gameId, played, G.externalId FROM ListItems LI
         INNER JOIN Lists L ON L.id = LI.listId
+        INNER JOIN Games G ON G.id = LI.gameId
         WHERE userId = @userId`);
     let result = await ps.execute({ userId });
-    listItems = result.recordset.map((x) => ({ gameId: x.gameId, played: x.played }));
+    listItems = result.recordset.map((x) => ({ gameId: x.externalId, played: x.played }));
     await ps.unprepare();
     return listItems;
 };
@@ -44,7 +45,19 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
     ps.input("played", sql.Bit);
     ps.input("gameExtId", sql.Int);
 
-    await ps.prepare(` 
+    // Temporarily create game and listitem if not exists in order to enable
+    // the pre-prod game filtering workflow
+    await ps.prepare(`
+        DECLARE @newGameId uniqueidentifier;
+        IF NOT EXISTS (SELECT id from Games WHERE externalId = @gameExtId)
+        BEGIN
+            INSERT INTO Games(externalId) VALUES (@gameExtId)
+        END 
+        SET @newGameId = (SELECT id from Games WHERE externalId = @gameExtId)
+        IF NOT EXISTS (SELECT listId from ListItems WHERE gameId = @newGameId AND listId=(SELECT id from Lists WHERE userID = @userId))
+        BEGIN
+            INSERT INTO ListItems(gameId, listId) VALUES (@newGameId, (SELECT id from Lists WHERE userID = @userId))
+        END
         UPDATE ListItems
         SET played = @played
         FROM ListItems LI

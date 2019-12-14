@@ -1,6 +1,7 @@
 import { getDataOrPrevious, LCE, lceContent, lceError, lceLoading, lceNotRequested } from "@model/LCE";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GOTYGame } from "../../../lib/api_model";
+import { ListSlice } from "./list";
 
 interface GamesByIdState {
     readonly [id: number]: GOTYGame;
@@ -33,7 +34,11 @@ export const gamesByIdSlice = createSlice({
     reducers: {
         setGame(state, action: PayloadAction<{ id: number; game: GOTYGame }>) {
             const { id, game } = action.payload;
-            state[id] = game;
+            if (state[id]) {
+                state[id] = { ...state[id], ...game };
+            } else {
+                state[id] = game;
+            }
         },
         setHasPlayedGame(state, action: PayloadAction<{ id: number; hasPlayed: boolean }>) {
             if (state[action.payload.id]) {
@@ -42,10 +47,26 @@ export const gamesByIdSlice = createSlice({
         },
     },
     extraReducers: (builder) =>
-        builder.addCase(allGamesSlice.actions.getMoreGamesSuccess, (state, action) => {
-            const { games } = action.payload;
-            games.forEach((game) => {
-                state[game.id] = game;
-            });
-        }),
+        builder
+            .addCase(allGamesSlice.actions.getMoreGamesSuccess, (state, action) => {
+                const { games } = action.payload;
+                games.forEach((game) => {
+                    const id = game.id;
+                    if (state[id]) {
+                        state[id] = { ...state[id], ...game };
+                    } else {
+                        state[id] = game;
+                    }
+                });
+            })
+            .addCase(ListSlice.actions.getListSuccess, (state, action) => {
+                const listItems = action.payload;
+                listItems.forEach((listItem) => {
+                    if (!state[listItem.gameId]) {
+                        // @ts-ignore
+                        state[listItem.gameId] = {};
+                    }
+                    state[listItem.gameId].hasPlayed = listItem.played;
+                });
+            }),
 });
