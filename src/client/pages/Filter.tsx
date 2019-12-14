@@ -11,7 +11,7 @@ import { getIsAutoScrollEnabled } from "../redux/selectors/uiSelectors";
 import { LCERenderer } from "../util/lceRenderer";
 import { useAnimationFrame } from "../util/useAnimationFrame";
 
-const rowHeight = 180;
+const rowHeight = 120;
 
 const renderFilterRow = (games: GOTYGame[], props: ListRowProps) => {
     const game = games[props.index];

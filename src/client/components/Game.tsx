@@ -30,13 +30,15 @@ export const Game = (props: GameProps) => {
             <div className="gameGradient" />
             <picture className="gamePicture">
                 <source media="(max-width: 640px)" srcSet={game.image.icon_url} />
-                <img src={game.image.original_url} alt={`image for ${game.name}`} className="gameImage" />
+                <a href={game.site_detail_url} target="_blank">
+                    <img src={game.image.original_url} alt={`image for ${game.name}`} className="gameImage" />
+                </a>
             </picture>
             <section className="gameInfo">
                 <h3 className="title">{game.name}</h3>
                 <span className="platforms">{game.platforms.map((platform) => platform.name).join(", ")}</span>
                 <a className="gburl" href={game.site_detail_url} target="_blank">
-                    {game.site_detail_url}
+                    View on Giantbomb
                 </a>
                 <span className="releaseDate">Released: {releaseDate.toLocaleDateString()}</span>
             </section>
