@@ -17,7 +17,9 @@ app.use(logMiddleware);
 
 app.use(session({ renew: true }, app));
 
-app.use(bodyParser());
+app.use(bodyParser({
+    enableTypes: ['json', 'form']
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
