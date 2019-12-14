@@ -63,7 +63,7 @@ export async function getGamesFromGiantbomb(options: GetGamesOptions) {
 
 export async function getGameDetailFromGiantbomb(guid: string) {
     const response: GBResponse<GBGame> = await getFromCacheOrNetwork(buildGameDetailUrl(guid), makeGbRequest);
-    return response.results;
+    return response.results || response;
 }
 
 function buildGameDetailUrl(guid: string) {
