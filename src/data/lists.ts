@@ -45,19 +45,7 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
     ps.input("played", sql.Bit);
     ps.input("gameExtId", sql.Int);
 
-    // Temporarily create game and listitem if not exists in order to enable
-    // the pre-prod game filtering workflow
     await ps.prepare(`
-        DECLARE @newGameId uniqueidentifier;
-        IF NOT EXISTS (SELECT id from Games WHERE externalId = @gameExtId)
-        BEGIN
-            INSERT INTO Games(externalId) VALUES (@gameExtId)
-        END 
-        SET @newGameId = (SELECT id from Games WHERE externalId = @gameExtId)
-        IF NOT EXISTS (SELECT listId from ListItems WHERE gameId = @newGameId AND listId=(SELECT id from Lists WHERE userID = @userId))
-        BEGIN
-            INSERT INTO ListItems(gameId, listId) VALUES (@newGameId, (SELECT id from Lists WHERE userID = @userId))
-        END
         UPDATE ListItems
         SET played = @played
         FROM ListItems LI
