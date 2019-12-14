@@ -1,8 +1,8 @@
 import config from "config";
 import sql from "mssql";
-import { defaultGameList } from '../constants';
+import { defaultGameList } from "../constants";
 import { ListItem, ListItemQuery } from "../routes/api/lists";
-import { findOrCreateGame } from './games';
+import { findOrCreateGame } from "./games";
 
 const sqlInfo: sql.config = config.get("SQL_INFO");
 const pool = new sql.ConnectionPool(sqlInfo);
@@ -44,8 +44,6 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
     ps.input("played", sql.Bit);
     ps.input("gameExtId", sql.Int);
 
-    console.log({ gameExtId, userId, played });
-
     await ps.prepare(` 
         UPDATE ListItems
         SET played = @played
@@ -66,7 +64,7 @@ const initialiseDefaultList = async (userId: string) => {
     for (let gameId of defaultGameList) {
         await insertListItem(listId, gameId);
     }
-}
+};
 
 const insertListItem = async (listId: string, gameExtId: number) => {
     const connection = await connectionPromise;
@@ -77,14 +75,12 @@ const insertListItem = async (listId: string, gameExtId: number) => {
     ps.input("listId", sql.UniqueIdentifier);
     ps.input("gameId", sql.UniqueIdentifier);
 
-    console.log({ listId, gameId });
-
     await ps.prepare(`INSERT INTO ListItems(listId, gameId, played) VALUES (@listId, @gameId, 0);`);
     await ps.execute({ listId, gameId });
     await ps.unprepare();
 
     return true;
-}
+};
 
 export const createList = async (userId: string): Promise<boolean> => {
     const connection = await connectionPromise;
@@ -97,4 +93,4 @@ export const createList = async (userId: string): Promise<boolean> => {
     await initialiseDefaultList(userId);
 
     return true;
-}
+};

@@ -1,6 +1,7 @@
 import config from "config";
 import sql from "mssql";
-import { createList } from './lists';
+import { createList } from "./lists";
+import { logTransactionError } from "./sqlHelper";
 
 const sqlInfo: sql.config = config.get("SQL_INFO");
 const pool = new sql.ConnectionPool(sqlInfo);
@@ -36,7 +37,7 @@ export const createUser = async (id: string): Promise<boolean> => {
         await transaction.commit();
         return true;
     } catch (e) {
-        console.error(e);
+        logTransactionError(e);
         await transaction.rollback();
         return false;
     }
