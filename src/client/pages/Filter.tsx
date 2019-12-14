@@ -89,7 +89,7 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
         if (isAutoScrollEnabled) {
             if (listRef.current && lastRowRenderInfo.current) {
                 scrollToPositionAnimated(
-                    currentScrollPosition.current + rowHeight - (currentScrollPosition.current % 180)
+                    currentScrollPosition.current + rowHeight - (currentScrollPosition.current % rowHeight)
                 );
             }
         }
