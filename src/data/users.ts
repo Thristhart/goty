@@ -26,8 +26,6 @@ export const createUser = async (id: string): Promise<boolean> => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
 
-    console.log(id)
-
     ps.input("id", sql.VarChar(255));
     try {
         await ps.prepare(`EXEC newUser @userId = @id`);
