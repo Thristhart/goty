@@ -7,10 +7,6 @@ const sqlInfo: sql.config = config.get("SQL_INFO");
 const pool = new sql.ConnectionPool(sqlInfo);
 const connectionPromise = pool.connect();
 
-export const insertListItem = async (userId: string, gameExtId: number) => {
-
-}
-
 export const insertComparison = async (comparison: Comparison) => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
