@@ -77,15 +77,3 @@ export const insertListItem = async (userId: string, gameExtId: number) => {
     return true;
 };
 
-export const createList = async (userId: string): Promise<boolean> => {
-    const connection = await connectionPromise;
-    const ps = new sql.PreparedStatement(connection);
-    ps.input("userId", sql.VarChar);
-
-    await ps.prepare(`INSERT INTO Lists(userID) VALUES (@userId);`);
-    await ps.execute({ userId });
-    await ps.unprepare();
-    await initialiseDefaultList(userId);
-
-    return true;
-};
