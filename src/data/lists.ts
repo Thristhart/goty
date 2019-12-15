@@ -65,7 +65,7 @@ export const insertListItem = async (userId: string, gameExtId: number) => {
 
     const gameId = await findOrCreateGame(gameExtId);
 
-    ps.input("userId", sql.UniqueIdentifier);
+    ps.input("userId", sql.VarChar(255));
     ps.input("gameId", sql.UniqueIdentifier);
 
     await ps.prepare(`INSERT INTO ListItems(listId, gameId, played)
@@ -76,4 +76,3 @@ export const insertListItem = async (userId: string, gameExtId: number) => {
 
     return true;
 };
-

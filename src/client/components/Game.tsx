@@ -1,4 +1,5 @@
 import { gamesByIdSlice } from "@redux/slices/games";
+import { GBGame } from "lib/giantbomb_model";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { GOTYGame } from "../../lib/api_model";
@@ -9,7 +10,7 @@ interface GameProps {
     readonly index: number;
 }
 
-export function buildDateFromGame(game: GOTYGame) {
+export function buildDateFromGame(game: GBGame) {
     if (game.original_release_date) {
         return new Date(game.original_release_date);
     }

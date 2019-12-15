@@ -23,3 +23,20 @@ export const getMyList = async () => {
 
     return listResponse;
 };
+
+export const addItemToList = async (id: number) => {
+    const url = "/api/list/addItem";
+
+    const bodyData: ListItemQuery = {
+        gameExtId: id,
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(bodyData),
+        headers: [["Content-Type", "application/json"]],
+    });
+    const listResponse = await response.json();
+
+    return listResponse;
+};

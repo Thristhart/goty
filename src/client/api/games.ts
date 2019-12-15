@@ -9,3 +9,11 @@ export const getAllGames = async (contToken?: string) => {
 
     return gamesResponse;
 };
+export const searchGames = async (query: string) => {
+    const url = `/api/games/search?query=${query}`;
+
+    const response = await fetch(url);
+    const searchResponse = await response.json();
+
+    return searchResponse;
+};
