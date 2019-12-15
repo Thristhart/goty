@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { List, ListRowProps, ScrollParams } from "react-virtualized";
 import { Game } from "../components/Game";
+import { Search } from "../components/Search";
 import { CONTENT, LCE, LOADING } from "../model/LCE";
 import { getHydratedGames } from "../redux/selectors/gamesSelectors";
 import { getIsAutoScrollEnabled } from "../redux/selectors/uiSelectors";
@@ -147,9 +148,7 @@ export const Filter = () => {
         <div id="filterPage">
             <section className="header">
                 <h1>First, tell us which games you played this year.</h1>
-                <p>
-                    If a game you played isn't on the list, <a href="#">click here to add it to your list.</a>
-                </p>
+                <Search />
                 <p>
                     <label htmlFor="autoScrollEnabled">
                         <input

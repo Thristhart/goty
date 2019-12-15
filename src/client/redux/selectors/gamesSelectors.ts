@@ -7,6 +7,10 @@ export const getAllGamesContToken = (state: RootState) => {
     return state.allGames.contToken;
 };
 
+export const getGameById = (state: RootState, id: number): GOTYGame | undefined => {
+    return state.gamesById[id];
+};
+
 export const getHydratedGames = (state: RootState): LCE<GOTYGame[]> => {
     const games = getDataOrPrevious(state.list);
     if (!games) {

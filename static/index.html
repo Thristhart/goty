@@ -50,6 +50,39 @@
             #filterPage .header {
                 padding-left: 8px;
             }
+            #search {
+                width: 100%;
+                max-width: 480px;
+            }
+            #searchResults {
+                display: flex;
+                flex-direction: column;
+                max-width: 480px;
+                width: 100%;
+            }
+            .searchGame {
+                display: grid;
+                grid-template-columns: 42px 1fr 160px;
+                align-items: center;
+            }
+            .searchGame .title {
+                margin: 0;
+            }
+
+            .searchGame .gameImage {
+                width: 32px;
+                height: 32px;
+            }
+            .searchGame .choices[data-played="false"] .buttonBackground {
+                transform: none;
+            }
+            .searchGame .choices[data-played="true"] .buttonBackground {
+                transform: none;
+            }
+            .searchGame .choices {
+                position: relative;
+            }
+
             .game {
                 box-sizing: border-box;
                 border-bottom: 6px solid black;
@@ -85,6 +118,9 @@
             @media (max-width: 640px) {
                 .game {
                     grid-template-columns: 80px 1fr 80px;
+                }
+                .searchGame {
+                    grid-template-columns: 42px 1fr 80px;
                 }
                 .playedIt::before {
                     content: "✔";
@@ -136,7 +172,8 @@
                 justify-content: center;
                 position: relative;
             }
-            .game .choices button {
+            .playedIt,
+            .notPlayedIt {
                 width: 100%;
                 border: 2px solid white;
                 background: transparent;
@@ -147,20 +184,20 @@
                 z-index: 10;
                 margin-bottom: 6px;
             }
-            .game .choices .buttonBackground {
+            .choices .buttonBackground {
                 width: 100%;
                 border-radius: 8px;
                 height: 30px;
                 position: absolute;
-                z-index: 0;
+                z-index: -1;
                 transition: background-color 150ms linear, transform 150ms ease-in-out;
                 background-color: transparent;
             }
-            .game .choices[data-played="true"] .buttonBackground {
+            .choices[data-played="true"] .buttonBackground {
                 transform: translateY(-21px);
                 background-color: #107c10;
             }
-            .game .choices[data-played="false"] .buttonBackground {
+            .choices[data-played="false"] .buttonBackground {
                 transform: translateY(15px);
                 background-color: #7c1010;
             }
