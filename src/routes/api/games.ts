@@ -40,11 +40,11 @@ export const getGameDetail: Middleware = async (ctx: ParameterizedContext, next:
 
 export const searchGiantbomb: Middleware = async (ctx: ParameterizedContext, next: Next) => {
     const text = ctx.query.query;
-    // if (!text) {
-    //     ctx.status = 400;
-    //     ctx.body = "Missing text for search";
-    //     return;
-    // }
+    if (!text) {
+        ctx.status = 400;
+        ctx.body = "Missing text for search";
+        return;
+    }
 
     const response: GBGame = await searchGamesOnGiantbomb(text);
 
