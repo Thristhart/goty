@@ -17,7 +17,21 @@ export const getListFromDB = async (userId: string): Promise<ListItem[]> => {
         INNER JOIN Games G ON G.id = LI.gameId
         WHERE userId = @userId`);
     let result = await ps.execute({ userId });
-    listItems = result.recordset.map((x) => ({ gameId: x.externalId, played: x.played }));
+    listItems = result.recordset.map((x) => ({ gameId: x.externalId, internalGameId: x.gameId, played: x.played }));
+    await ps.unprepare();
+    return listItems;
+};
+
+export const getPlayedListFromDB = async (userId: string): Promise<string[]> => {
+    const connection = await connectionPromise;
+    const ps = new sql.PreparedStatement(connection);
+    ps.input("userId", sql.VarChar);
+    await ps.prepare(`SELECT gameId FROM ListItems LI
+        INNER JOIN Lists L ON L.id = LI.listId
+        INNER JOIN Games G ON G.id = LI.gameId
+        WHERE userId = @userId AND played = 1`);
+    let result = await ps.execute({ userId });
+    const listItems = result.recordset.map((x) => x.gameId);
     await ps.unprepare();
     return listItems;
 };

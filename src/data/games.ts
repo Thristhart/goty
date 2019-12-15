@@ -17,6 +17,28 @@ export const getGameFromDB = async (extId: number): Promise<string> => {
     return result.recordset[0] && result.recordset[0].id;
 };
 
+export const transformInternalGameIdsToExternalIds = async (gameIds: readonly string[]): Promise<number[]> => {
+    const connection = await connectionPromise;
+    const ps = new sql.PreparedStatement(connection);
+
+    const inputs: { [key: string]: string } = {};
+    gameIds.forEach((game, index) => {
+        const name = "gameId" + index;
+        ps.input("gameId" + index, sql.UniqueIdentifier);
+        inputs[name] = game;
+    });
+
+    await ps.prepare(
+        `SELECT externalId FROM Games WHERE id IN (${Object.keys(inputs)
+            .map((i) => "@" + i)
+            .join(", ")})`
+    );
+    let result = await ps.execute(inputs);
+    await ps.unprepare();
+
+    return result.recordset.map((record) => record.externalId);
+};
+
 export const insertGameToDB = async (extId: number): Promise<boolean> => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);

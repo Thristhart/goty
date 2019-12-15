@@ -14,6 +14,7 @@ export const get = promisify(client.get.bind(client));
 const set: (key: string, value: any, mode: string, duration: number) => Promise<void> = promisify(
     client.set.bind(client)
 );
+export const setWithoutExpiry = promisify(client.set.bind(client));
 
 export async function saveToCache(url: string, response: any) {
     let cacheLength = TWELVE_HOURS;

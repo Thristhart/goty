@@ -9,6 +9,7 @@ export interface ListItem {
     listId?: string;
     played: boolean;
     gameDetails?: GBGame;
+    internalGameId: string;
 }
 
 export interface ListItemQuery {
