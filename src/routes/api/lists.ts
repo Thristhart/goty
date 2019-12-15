@@ -60,12 +60,8 @@ export const setListItemPlayed: Middleware = async (ctx: ParameterizedContext, n
 export const addListItem: Middleware = async (ctx: ParameterizedContext, next: Next) => {
     let listItem: ListItemQuery = ctx.request.body;
     listItem.userId = ctx.state.user.id;
-    const list = await insertListItem(listItem.userId!, listItem.gameExtId);
-    if (list != undefined) {
-        ctx.body = list;
-    } else {
-        ctx.status = 500;
-        ctx.body = "DB Error.";
-        return;
-    }
+    await insertListItem(listItem.userId!, listItem.gameExtId);
+
+    ctx.status = 200;
+    return;
 };
