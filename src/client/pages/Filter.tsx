@@ -1,4 +1,3 @@
-import { allGamesSlice } from "@redux/slices/games";
 import { UISlice } from "@redux/slices/ui";
 import { GOTYGame } from "lib/api_model";
 import React, { useEffect, useRef, useState } from "react";
@@ -90,7 +89,7 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
         if (isAutoScrollEnabled) {
             if (listRef.current && lastRowRenderInfo.current) {
                 scrollToPositionAnimated(
-                    currentScrollPosition.current + rowHeight - (currentScrollPosition.current % 180)
+                    currentScrollPosition.current + rowHeight - (currentScrollPosition.current % rowHeight)
                 );
             }
         }
@@ -101,9 +100,6 @@ const ListView = (games: GOTYGame[], isLoading: boolean = false) => {
 
     const onRowsRendered = (info: RowRenderInfo) => {
         lastRowRenderInfo.current = info;
-        if (info.overscanStopIndex + 3 >= games.length && !isLoadingAsOfLastRenderRef.current) {
-            dispatch(allGamesSlice.actions.startGetMoreGames());
-        }
     };
     useEffect(() => {
         window.addEventListener("goToNext", goToNext);

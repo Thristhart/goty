@@ -9,7 +9,7 @@ interface GameProps {
     readonly index: number;
 }
 
-function buildDateFromGame(game: GOTYGame) {
+export function buildDateFromGame(game: GOTYGame) {
     if (game.original_release_date) {
         return new Date(game.original_release_date);
     }

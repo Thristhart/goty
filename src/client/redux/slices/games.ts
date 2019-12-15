@@ -62,11 +62,7 @@ export const gamesByIdSlice = createSlice({
             .addCase(ListSlice.actions.getListSuccess, (state, action) => {
                 const listItems = action.payload;
                 listItems.forEach((listItem) => {
-                    if (!state[listItem.gameId]) {
-                        // @ts-ignore
-                        state[listItem.gameId] = {};
-                    }
-                    state[listItem.gameId].hasPlayed = listItem.played;
+                    state[listItem.gameId] = { ...listItem.gameDetails!, hasPlayed: listItem.played };
                 });
             }),
 });
