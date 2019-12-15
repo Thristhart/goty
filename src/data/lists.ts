@@ -59,41 +59,23 @@ export const setListItemPlayedInDB = async (listItem: ListItemQuery): Promise<bo
     return true;
 };
 
-const initialiseDefaultList = async (userId: string) => {
-    const listId = await getListId(userId);
-    bulkInsertListItems(listId);
-};
-
-const insertListItem = async (listId: string, gameExtId: number) => {
+export const insertListItem = async (userId: string, gameExtId: number) => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
 
     const gameId = await findOrCreateGame(gameExtId);
 
-    ps.input("listId", sql.UniqueIdentifier);
+    ps.input("userId", sql.UniqueIdentifier);
     ps.input("gameId", sql.UniqueIdentifier);
 
-    await ps.prepare(`INSERT INTO ListItems(listId, gameId, played) VALUES (@listId, @gameId, 0);`);
-    await ps.execute({ listId, gameId });
+    await ps.prepare(`INSERT INTO ListItems(listId, gameId, played)
+    SELECT id, @gameId, 1
+    FROM Lists WHERE userId = @userId;`);
+    await ps.execute({ userId, gameId });
     await ps.unprepare();
 
     return true;
 };
-
-const bulkInsertListItems = async (listId: string) => {
-    const connection = await connectionPromise;
-    const ps = new sql.PreparedStatement(connection);
-
-    ps.input("listId", sql.UniqueIdentifier);
-
-    await ps.prepare(`INSERT INTO ListItems(listId, gameId, played)
-        SELECT @listId,
-        id,
-        0
-        FROM DefaultGames`);
-    await ps.execute({ listId });
-    await ps.unprepare();
-}
 
 export const createList = async (userId: string): Promise<boolean> => {
     const connection = await connectionPromise;

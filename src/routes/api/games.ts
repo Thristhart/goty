@@ -1,5 +1,5 @@
 import { Middleware, Next, ParameterizedContext } from "koa";
-import { generateContToken, getGameDetailFromGiantbomb, getGamesFromGiantbomb } from "../../lib/giantbomb";
+import { generateContToken, getGameDetailFromGiantbomb, getGamesFromGiantbomb, searchGamesOnGiantbomb } from "../../lib/giantbomb";
 import { GBGame } from "../../lib/giantbomb_model";
 
 export interface GamesApiResponse {
@@ -36,3 +36,17 @@ export const getGameDetail: Middleware = async (ctx: ParameterizedContext, next:
 
     ctx.body = response;
 };
+
+
+export const searchGiantbomb: Middleware = async (ctx: ParameterizedContext, next: Next) => {
+    const text = ctx.query.query;
+    // if (!text) {
+    //     ctx.status = 400;
+    //     ctx.body = "Missing text for search";
+    //     return;
+    // }
+
+    const response: GBGame = await searchGamesOnGiantbomb(text);
+
+    ctx.body = response;
+}

@@ -1,5 +1,5 @@
 import { Middleware, Next, ParameterizedContext } from "koa";
-import { getListFromDB, setListItemPlayedInDB } from "../../data/lists";
+import { getListFromDB, insertListItem, setListItemPlayedInDB } from "../../data/lists";
 import { get } from "../../lib/cache";
 import { getGameDetailFromGiantbomb } from "../../lib/giantbomb";
 import { GBGame } from "../../lib/giantbomb_model";
@@ -14,7 +14,7 @@ export interface ListItem {
 export interface ListItemQuery {
     gameExtId: number;
     userId?: string;
-    played: boolean;
+    played?: boolean;
 }
 const getDefaultList = get("default_list")
     .then((items) => JSON.parse(items))
@@ -48,6 +48,19 @@ export const setListItemPlayed: Middleware = async (ctx: ParameterizedContext, n
     let listItem: ListItemQuery = ctx.request.body;
     listItem.userId = ctx.state.user.id;
     const list = await setListItemPlayedInDB(listItem);
+    if (list != undefined) {
+        ctx.body = list;
+    } else {
+        ctx.status = 500;
+        ctx.body = "DB Error.";
+        return;
+    }
+};
+
+export const addListItem: Middleware = async (ctx: ParameterizedContext, next: Next) => {
+    let listItem: ListItemQuery = ctx.request.body;
+    listItem.userId = ctx.state.user.id;
+    const list = await insertListItem(listItem.userId!, listItem.gameExtId);
     if (list != undefined) {
         ctx.body = list;
     } else {
