@@ -9,6 +9,7 @@ const YEAR_START = "2019-01-01 00:00:00";
 const YEAR_END = "2020-01-01 00:00:00";
 
 const LIMIT = 100;
+const SEARCH_LIMIT = 5;
 
 interface GetGamesOptions {
     offset: number;
@@ -66,8 +67,17 @@ export async function getGameDetailFromGiantbomb(guid: string) {
     return response.results || response;
 }
 
+export async function searchGamesOnGiantbomb(searchText: string) {
+    const response: GBResponse<GBGame> = await getFromCacheOrNetwork(buildSearchUrl(searchText), makeGbRequest);
+    return response.results || response;
+}
+
 function buildGameDetailUrl(guid: string) {
     return `https://www.giantbomb.com/api/game/${guid}/?api_key=${API_KEY}&format=json`;
+}
+
+function buildSearchUrl(searchText: string) {
+    return `https://www.giantbomb.com/api/search/?api_key=${API_KEY}&format=json&query=${searchText}&resources=game&limit=${SEARCH_LIMIT}`;
 }
 
 export function generateContToken(offset: number) {
