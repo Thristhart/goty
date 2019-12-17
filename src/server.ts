@@ -2,6 +2,7 @@ import config from "config";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import passport from "koa-passport";
+import send from "koa-send";
 import session from "koa-session";
 import staticMiddleware from "koa-static";
 import path from "path";
@@ -26,9 +27,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(staticMiddleware(path.join(__dirname, "../static/"), { defer: true, extensions: ["html"] }));
-
 app.use(router.routes());
+
+app.use(staticMiddleware(path.join(__dirname, "../static/"), { extensions: ["html"] }));
+
+app.use((ctx) => {
+    return send(ctx, "index.html", { root: path.join(__dirname, "../static/") });
+});
 
 console.log("Starting server on 8080");
 

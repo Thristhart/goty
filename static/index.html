@@ -19,6 +19,7 @@
                 display: grid;
                 grid-template-columns: 1fr;
                 grid-template-rows: auto 1fr;
+                overflow: hidden;
             }
             a {
                 color: white;
@@ -33,6 +34,21 @@
             }
             nav h1 {
                 margin-left: 8px;
+            }
+            nav a {
+                color: lightgray;
+                text-decoration: none;
+            }
+            nav ul {
+                list-style-type: none;
+            }
+            nav .selected {
+                list-style-type: disc;
+            }
+            nav .selected a {
+                font-weight: bold;
+                color: white;
+                text-decoration: underline;
             }
             .site-icon {
                 width: 32px;
@@ -83,7 +99,7 @@
                 position: relative;
             }
 
-            .game {
+            #filterPage .game {
                 box-sizing: border-box;
                 border-bottom: 6px solid black;
                 display: grid;
@@ -92,18 +108,18 @@
 
                 padding-right: 1.5em;
             }
-            .game .title {
+            #filterPage .game .title {
                 margin-top: 0.2em;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-            .gameImage {
+            #filterPage .gameImage {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
-            .gamePicture {
+            #filterPage .gamePicture {
                 grid-column: 1/1;
                 grid-row: 1/1;
                 width: 100%;
@@ -114,6 +130,169 @@
             }
             .notPlayedIt::after {
                 content: "HAVEN'T PLAYED IT";
+            }
+            #comparisonPage {
+                display: grid;
+                grid-template-rows: min-content 1fr;
+            }
+            #comparison {
+                display: grid;
+                grid-template-columns: 1fr min-content 1fr;
+            }
+            #loader {
+                position: absolute;
+                height: calc(50vh + 5vmin);
+                bottom: 0;
+                left: 0;
+                right: 0;
+                opacity: 0;
+            }
+            #loader.visible {
+                opacity: 1;
+                transition: opacity 600ms linear;
+            }
+            #loader .loader-paddle-left,
+            #loader .loader-paddle-right,
+            #loader .loader-ball {
+                animation-timing-function: linear;
+                animation-duration: 8s;
+                animation-fill-mode: forwards;
+                animation-iteration-count: infinite;
+                background-color: white;
+            }
+            #loader .loader-paddle-left,
+            #loader .loader-paddle-right {
+                width: 5vw;
+                height: 30vh;
+                position: absolute;
+                top: 0;
+            }
+            #loader .loader-paddle-left {
+                left: 0;
+                animation-name: loaderPaddleLeft;
+            }
+            #loader .loader-paddle-right {
+                right: 0;
+                animation-name: loaderPaddleRight;
+            }
+            #loader .loader-ball {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 5vmin;
+                height: 5vmin;
+                border-radius: 50%;
+                background-color: white;
+                animation-name: loaderBall;
+            }
+            @keyframes loaderPaddleLeft {
+                0%,
+                100% {
+                    transform: translateY(0vh);
+                }
+                10% {
+                    transform: translateY(15vh);
+                }
+                25% {
+                    transform: translateY(5vh);
+                }
+                45% {
+                    transform: translateY(13vh);
+                }
+                60% {
+                    transform: translateY(15vh);
+                }
+                80% {
+                    transform: translateY(30vh);
+                }
+                95% {
+                    transform: translateY(-2.5vh);
+                }
+            }
+            @keyframes loaderPaddleRight {
+                0%,
+                100% {
+                    transform: translateY(10vh);
+                }
+                10% {
+                    transform: translateY(5vh);
+                }
+                30% {
+                    transform: translateY(17vh);
+                }
+                55% {
+                    transform: translateY(20vh);
+                }
+                80% {
+                    transform: translateY(32vh);
+                }
+            }
+            @keyframes loaderBall {
+                0%,
+                100% {
+                    transform: translate(5vw, 15vh);
+                }
+                15% {
+                    transform: translate(50vw, 50vh);
+                }
+                30% {
+                    transform: translate(calc(95vw - 5vmin), 25vh);
+                }
+                45% {
+                    transform: translate(50vw, 0vh);
+                }
+                60% {
+                    transform: translate(5vw, 15vh);
+                }
+                80% {
+                    transform: translate(calc(95vw - 5vmin), 40vh);
+                }
+            }
+            .comparisonGame {
+                grid-row: 1/1;
+                position: relative;
+                background-color: black;
+                border: none;
+                font: inherit;
+                color: white;
+            }
+            .comparisonGame .gameInfo {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                z-index: 2;
+                text-align: left;
+            }
+            .comparisonGame .gameGradient {
+                background-image: linear-gradient(to top, black, transparent);
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                z-index: 2;
+            }
+            .comparisonGame .gamePicture {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                z-index: 1;
+            }
+            .comparisonGame .gamePicture img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                z-index: 0;
+            }
+            .or {
+                grid-row: 1/1;
+                align-self: center;
+                padding: 1em;
+            }
+            #comparisonPage .question {
+                margin-left: 0.5em;
             }
             @media (max-width: 640px) {
                 .game {
@@ -131,8 +310,21 @@
                 .gburl {
                     display: none;
                 }
-                nav {
-                    display: none;
+                #filterPage .header {
+                    font-size: 14px;
+                }
+                #comparison {
+                    grid-template-columns: initial;
+                    grid-template-rows: 1fr min-content 1fr;
+                }
+                .comparisonGame {
+                    grid-column: 1/1;
+                    grid-row: initial;
+                }
+                .or {
+                    grid-column: 1/1;
+                    grid-row: initial;
+                    text-align: center;
                 }
             }
             .gameInfo {
@@ -153,7 +345,7 @@
             .gameInfo .releaseDate {
                 margin-top: auto;
             }
-            .gameGradient {
+            #filterPage .gameGradient {
                 background: linear-gradient(to right, black 150px, transparent 600px);
                 grid-column: 1/-1;
                 grid-row: 1/-1;

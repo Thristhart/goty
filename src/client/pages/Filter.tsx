@@ -2,6 +2,7 @@ import { UISlice } from "@redux/slices/ui";
 import { GOTYGame } from "lib/api_model";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { List, ListRowProps, ScrollParams } from "react-virtualized";
 import { Game } from "../components/Game";
 import { Search } from "../components/Search";
@@ -159,6 +160,9 @@ export const Filter = () => {
                         />
                         Check to enable auto-scrolling
                     </label>
+                </p>
+                <p>
+                    When you're ready, <Link to="/compare">click here to start comparing the games you've played.</Link>
                 </p>
             </section>
             <LCERenderer

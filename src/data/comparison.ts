@@ -16,7 +16,7 @@ export const insertComparison = async (comparison: Comparison) => {
 
     ps.input("betterGameId", sql.UniqueIdentifier);
     ps.input("worseGameId", sql.UniqueIdentifier);
-    ps.input("userId", sql.UniqueIdentifier);
+    ps.input("userId", sql.VarChar(255));
 
     await ps.prepare(`INSERT INTO Comparison(betterGame, worseGame, userId)
     VALUES (@betterGameId, @worseGameId, @userId)`);
@@ -25,17 +25,76 @@ export const insertComparison = async (comparison: Comparison) => {
 
     return true;
 };
-
-export const getNumberOfTimesGameMeasuredLesser = async (userId: string, gameId: string) => {
+export const getComparisonsBetweenTwoGames = async (
+    userId: string,
+    game1: string,
+    game2: string
+): Promise<{ betterGame: string; worseGame: string }[]> => {
     const connection = await connectionPromise;
     const ps = new sql.PreparedStatement(connection);
 
-    ps.input("worseGameId", sql.UniqueIdentifier);
-    ps.input("userId", sql.UniqueIdentifier);
+    ps.input("game1", sql.UniqueIdentifier);
+    ps.input("game2", sql.UniqueIdentifier);
+    ps.input("userId", sql.VarChar(255));
 
-    await ps.prepare(`SELECT COUNT(*) FROM Comparison WHERE worseGame=@worseGameId AND userId=@userId)`);
-    const result = await ps.execute({ userId, worseGameId: gameId });
+    await ps.prepare(
+        `SELECT worseGame, betterGame FROM Comparison WHERE betterGame=@game1 AND worseGame=@game2 OR betterGame=@game2 AND worseGame=@game1`
+    );
+    const result = await ps.execute({ userId, game1, game2 });
     await ps.unprepare();
 
-    return result.returnValue;
+    return result.recordset;
+};
+
+export const getNumberOfTimesGameMeasuredLesserMap = async (userId: string): Promise<{ [gameId: string]: number }> => {
+    const connection = await connectionPromise;
+    const ps = new sql.PreparedStatement(connection);
+
+    ps.input("userId", sql.VarChar(255));
+
+    await ps.prepare(`SELECT worseGame, Count(worseGame) FROM Comparison WHERE userId=@userId GROUP BY worseGame`);
+    const result = await ps.execute({ userId });
+    await ps.unprepare();
+
+    const resultMap: { [gameId: string]: number } = {};
+    result.recordset.forEach((response) => {
+        resultMap[response.worseGame] = response[""];
+    });
+
+    return resultMap;
+};
+
+export const getGamesThatHaveNeverBeenCompared = async (userId: string) => {
+    const connection = await connectionPromise;
+    const ps = new sql.PreparedStatement(connection);
+
+    ps.input("userId", sql.VarChar(255));
+
+    // idk what I'm doing but this works
+    await ps.prepare(`
+    SELECT TOP 1 * FROM 
+    (
+        SELECT gameId FROM ListItems LI TABLESAMPLE SYSTEM (50 PERCENT)
+        INNER JOIN Lists L ON L.id = LI.listId
+        INNER JOIN Games G on G.id = LI.gameId
+        WHERE userId = @userId AND played = 1
+    ) Game1,
+    (
+        SELECT gameId FROM ListItems LI TABLESAMPLE SYSTEM (50 PERCENT)
+        INNER JOIN Lists L ON L.id = LI.listId
+        INNER JOIN Games G on G.id = LI.gameId
+        WHERE userId = @userId AND played = 1
+    ) Game2
+    WHERE Game1.gameId != Game2.gameId AND NOT EXISTS (
+        Select * FROM Comparison WHERE (
+            worseGame = Game1.gameId AND betterGame = Game2.gameId OR
+            worseGame = Game2.gameId AND betterGame = Game1.gameId
+        )
+    ) 
+    `);
+
+    const result = await ps.execute({ userId });
+    await ps.unprepare();
+
+    return result.recordset[0].gameId;
 };

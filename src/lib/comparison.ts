@@ -4,7 +4,6 @@
  * Samuel L Smith
  * https://arxiv.org/pdf/1612.08555.pdf
  */
-import { getNumberOfTimesGameMeasuredLesser } from "../data/comparison";
 import { get, setWithoutExpiry } from "./cache";
 import shuffle = require("shuffle-array");
 
@@ -63,7 +62,7 @@ function findCertaintyOfOrdering(i: string, j: string, candidates: string[][]) {
     return Math.abs(iBeforeJ - jBeforeI);
 }
 
-type Pair = readonly [string, string];
+export type Pair = readonly [string, string];
 /**
  * Find the two elements that the candidate set is least certain about.
  * Minimize (Nij - Nji)^2, where Nij is the number of candidates where i < j
@@ -94,9 +93,13 @@ export function doesCandidateMatchMeasurement(pair: Pair, candidate: string[]) {
     return candidate.indexOf(pair[0]) < candidate.indexOf(pair[1]);
 }
 
-export const probabilityOfUserError = 0.15;
+export const probabilityOfUserError = 0.05;
 
-export async function sampleByMaximumElement(userId: string, gameIds: string[]): Promise<string[]> {
+export async function sampleByMaximumElement(
+    userId: string,
+    gameIds: string[],
+    numberOfTimesMeasuredLesser: { [gameId: string]: number }
+): Promise<string[]> {
     if (gameIds.length === 1) {
         return gameIds;
     }
@@ -107,7 +110,7 @@ export async function sampleByMaximumElement(userId: string, gameIds: string[]):
     const betaValues: number[] = [];
     let normalizationConstant = 0;
     for (let i = 0; i < gameIds.length; i++) {
-        const nDispute = await getNumberOfTimesGameMeasuredLesser(userId, gameIds[i]);
+        const nDispute = numberOfTimesMeasuredLesser[gameIds[i]] || 0;
         betaValues[i] = Math.pow((1 - probabilityOfUserError) / probabilityOfUserError, nDispute);
         normalizationConstant += betaValues[i];
     }
@@ -116,7 +119,7 @@ export async function sampleByMaximumElement(userId: string, gameIds: string[]):
         const gamma = betaValues[i] / normalizationConstant;
         if (randomValue < w + gamma) {
             const subsetWithoutValue = gameIds.slice(0, i).concat(gameIds.slice(i + 1));
-            const subResult = await sampleByMaximumElement(userId, subsetWithoutValue);
+            const subResult = await sampleByMaximumElement(userId, subsetWithoutValue, numberOfTimesMeasuredLesser);
             subResult.unshift(gameIds[i]);
             return subResult;
         } else {
