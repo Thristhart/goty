@@ -55,7 +55,7 @@
         "koa-session": "^5.12.3",
         "koa-static": "^5.0.0",
         "mssql": "^6.0.1",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "passport-google-oauth20": "^2.0.0",
         "passport-oauth2": "^1.5.0",
         "prettier": "^1.19.1",
