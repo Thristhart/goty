@@ -75,6 +75,6 @@
         "tslib": "^1.10.0",
         "typescript": "^3.7.2",
         "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10"
+        "webpack-cli": "^3.3.12"
     }
 }
